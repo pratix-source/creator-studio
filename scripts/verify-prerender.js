@@ -1,0 +1,10 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+const html = fs.readFileSync(path.join(root, 'dist', 'en', 'creator-studio', 'index.html'), 'utf8');
+const required = ['<title>Free Video Content Creator Studio | Pratix.io</title>', '<link rel="canonical" href="https://pratix.io/en/creator-studio" />', 'textarea', 'copy', 'teleprompter'];
+const missing = required.filter(x => !html.includes(x));
+if (missing.length) throw new Error(`Missing markers: ${missing.join(', ')}`);
+if ((html.match(/data-prerender-hreflang="true"/g) || []).length !== 2) throw new Error('Expected 2 hreflang links');
+if (html.includes('yourdomain.com')) throw new Error('Placeholder domain remains');
+console.log('Static SEO and client-side markers: passed');
